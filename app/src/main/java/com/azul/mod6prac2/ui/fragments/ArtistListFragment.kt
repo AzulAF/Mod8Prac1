@@ -45,6 +45,7 @@ class ArtistListFragment  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mediaPlayer = MediaPlayer.create(requireActivity(), R.raw.wah)
+        setMediaPlayerVolume(7.5f, 7.5f)
         //Obteniendo la instancia al repositorio
         repository = (requireActivity().application as ArtistsApp).repository
 
@@ -59,7 +60,7 @@ class ArtistListFragment  : Fragment() {
                 p0: Call<MutableList<ArtistDto>>,
                 response: Response<MutableList<ArtistDto>>
             ) {
-                mediaPlayer?.start()
+
                 binding.pbLoading.visibility = View.GONE
 
                 response.body()?.let{ artists ->
@@ -75,6 +76,7 @@ class ArtistListFragment  : Fragment() {
                                     .replace(R.id.fragment_container, ArtistDetailFragment.newInstance(id))
                                     .addToBackStack(null)
                                     .commit()
+                                mediaPlayer?.start()
                             }
                         }
                     }
@@ -92,6 +94,11 @@ class ArtistListFragment  : Fragment() {
             }
 
         })
+    }
+
+    private fun setMediaPlayerVolume(leftVolume: Float, rightVolume: Float) {
+        // Establecer el volumen
+        mediaPlayer?.setVolume(leftVolume, rightVolume)
     }
 
     override fun onDestroy() {
